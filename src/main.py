@@ -1,23 +1,37 @@
-from src.orchestrator import llm
-from src.stt import speech_recognizer
-from src.tts import speech_Lancer
-from src.audio_player import play_audio
+# src/main.py
 
+import logging
+from src.orchestrator import Orchestrator
+from src.stt import SpeechRecognizer
+from src.tts import TextToSpeech
+from src.audio_player import AudioPlayer
 
-while True:
-    
-    speaker_text = speech_recognizer()
+def main():
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(message)s")
 
-    response = llm.invoke(speaker_text).content
+    stt = SpeechRecognizer()
+    tts = TextToSpeech(output_path="audio_file/output.mp3")
+    orchestrator = Orchestrator()
+    audio_player = AudioPlayer(audio_file="audio_file/output.mp3")
 
-    speech_Lancer(response)
+    while True:
+        audio = stt.listen()
+        speaker_text = stt.recognize(audio)
 
+        # Skip if no speech is recognized
+        if not speaker_text:
+            continue
 
-    # Specify the path to your audio file
-    audio_file = "audio_file/output.mp3"
+        # Check for the stop command to cancel the overall system
+        if speaker_text.strip().lower() == "stop":
+            logging.info("Stop command received. Exiting the system...")
+            break
 
-    # Play the audio file
-    play_audio()
+        response = orchestrator.generate(speaker_text)
 
+        if response:
+            tts.generate(response)
+            audio_player.play()
 
-
+if __name__ == "__main__":
+    main()

@@ -1,31 +1,28 @@
 import speech_recognition as sr
+import logging
 
+class SpeechRecognizer():
+    def __init__(self):
+        self.recognizer = sr.Recognizer()
 
+    def listen(self):
+        with sr.Microphone() as source:
+            logging.info("Adjusting for ambient noise...")
+            self.recognizer.adjust_for_ambient_noise(source)
+            logging.info("Listening for speech...")
+            audio = self.recognizer.listen(source)
 
-def speech_recognizer():
-
-    recognizer = sr.Recognizer()
-
-    while True:  # Infinite loop for continuous listening
-        try:
-            with sr.Microphone() as source:
-                print("Listening... Speak now.")
-                recognizer.adjust_for_ambient_noise(source)  # Adjusts for background noise
-                audio = recognizer.listen(source)
-
-            text = recognizer.recognize_google(audio)
-            print(f"You said: {text}")
-
-            
-
-            # Optional: Break the loop if a specific keyword is spoken
-            if "stop" in text.lower():
-                print("Stopping...")
-                break
-
+        return audio
+    
+    def recognize(self, audio):
+        try: 
+            text = self.recognizer.recognize_google(audio)
+            logging.info(f"Recgnized speech: {text}")
             return text
-
         except sr.UnknownValueError:
-            print("Sorry, could not understand the audio.")
+            logging.warning("Could not understand the audio.")
+            return None
         except sr.RequestError as e:
-            print(f"Request error: {e}")
+            logging.error(f"Request error: {e}")
+            return None
+
