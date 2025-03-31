@@ -1,6 +1,7 @@
 gtts
-SpeechRecognition
+pipwin
 pyaudio
+SpeechRecognition
 pygame
 langchain_google_genai
 dotenv
