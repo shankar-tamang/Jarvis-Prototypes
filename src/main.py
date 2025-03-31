@@ -1,7 +1,7 @@
-from Orchestrator import llm
-from STT import speech_recognizer
-from TTS import speech_Lancer
-from Play_audio import play_audio
+from src.orchestrator import llm
+from src.stt import speech_recognizer
+from src.tts import speech_Lancer
+from src.audio_player import play_audio
 
 
 while True:
