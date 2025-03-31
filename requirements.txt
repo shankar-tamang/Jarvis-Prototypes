@@ -1,0 +1,6 @@
+gtts
+SpeechRecognition
+pyaudio
+pygame
+langchain_google_genai
+dotenv
